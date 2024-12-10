@@ -1,0 +1,34 @@
+name: portfolio
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  url_launcher: ^6.3.1
+  flutter_launcher_icons: ^0.14.2
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/work_0.jpg
+    - assets/work_1.jpg
+    - assets/work_2.jpg
+    - assets/work_3.jpg
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"

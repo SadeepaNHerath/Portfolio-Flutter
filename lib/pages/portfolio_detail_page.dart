@@ -211,25 +211,22 @@ class PortfolioDetailPageState extends State<PortfolioDetailPage>
                       """,
                     ),
                     _buildQualificationItem(
-                      "ICD Program",
+                      "Professional Certificate",
                       "ICET Panadura",
                       "2024",
                       """
-                      Full-stack development
-                      React framework
-                      Node.js
-                      MySQL databases
-                      Java programming
-                      Web development
-                      Back-end development
+                      Comprehensive full-stack development training
+                      Java and web engineering fundamentals
+                      Backend and database-focused implementation
                       """,
                     ),
                     _buildQualificationItem(
-                      "Bsc(hons) Artificial Intelligence",
+                      "BSc (Hons) in Artificial Intelligence",
                       "University of Moratuwa",
-                      "2025",
+                      "2025 - Present",
                       """
-                      Waiting for the intake
+                      AI undergraduate pathway focused on intelligent systems,
+                      practical software engineering, and modern AI tooling.
                       """,
                     ),
                   ],
@@ -318,7 +315,7 @@ class PortfolioDetailPageState extends State<PortfolioDetailPage>
                   Icon(Icons.emoji_events, size: 40, color: Colors.limeAccent),
                   SizedBox(width: 16),
                   Text(
-                    "Achievements &\nCertifications",
+                    "Achievements &\nCommunity",
                     style: TextStyle(
                       fontSize: 24,
                       color: Colors.limeAccent,
@@ -336,8 +333,12 @@ class PortfolioDetailPageState extends State<PortfolioDetailPage>
                   _buildAchievementItem("Full-Stack Developer Certification",
                       "Issued by ICET - March 2025"),
                   _buildAchievementItem(
-                    "Best UI Design",
-                    "My team won prize for Best UI Design at Industry Minds Pre-Launch 2024",
+                    "GitHub Profile Achievements",
+                    "Public Sponsor, Galaxy Brain, Pull Shark x2, Starstruck, Pair Extraordinaire, YOLO, and Quickdraw.",
+                  ),
+                  _buildAchievementItem(
+                    "Open Source Activity",
+                    "Active contributions across personal and collaborative repositories with consistent commit history.",
                   ),
                 ],
               ),

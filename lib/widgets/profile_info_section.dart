@@ -4,6 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 class ProfileInfoSection extends StatelessWidget {
   const ProfileInfoSection({super.key});
 
+  static final Uri _whatsappUri = Uri.parse('https://wa.me/qr/YFCMEVAQBMQTA1');
+  static final Uri _linkedinUri =
+      Uri.parse('https://www.linkedin.com/in/sadeepanherath/');
+  static final Uri _githubUri = Uri.parse('https://github.com/SadeepaNHerath');
+  static final Uri _emailUri = Uri.parse('mailto:sadeepahearth@gmail.com');
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -47,11 +53,19 @@ class ProfileInfoSection extends StatelessWidget {
           const SizedBox(height: 5),
 
           const Text(
-            'Full Stack Web Developer',
+            'AI Undergraduate | Full-Stack Developer',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'University of Moratuwa | Panadura, Sri Lanka',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.white70,
             ),
           ),
           const SizedBox(height: 20),
@@ -60,7 +74,7 @@ class ProfileInfoSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton.icon(
-                onPressed: _launchWhatsapp,
+                onPressed: () => _launchExternal(_whatsappUri),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightGreen,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
@@ -80,17 +94,37 @@ class ProfileInfoSection extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            alignment: WrapAlignment.center,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () => _launchExternal(_linkedinUri),
+                icon: const Icon(Icons.work_outline),
+                label: const Text('LinkedIn'),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => _launchExternal(_githubUri),
+                icon: const Icon(Icons.code),
+                label: const Text('GitHub'),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => _launchExternal(_emailUri),
+                icon: const Icon(Icons.email_outlined),
+                label: const Text('Email'),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  static void _launchWhatsapp() async {
-    final whatsappUrl = Uri.parse(
-        'https://wa.me/qr/YFCMEVAQBMQTA1');
-
-    if (await canLaunchUrl(whatsappUrl)) {
-      await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+  static Future<void> _launchExternal(Uri uri) async {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
   }
 }

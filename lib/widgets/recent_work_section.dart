@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RecentWorkSection extends StatelessWidget {
   RecentWorkSection({super.key});
 
   final List<Map<String, String>> projectDetails = [
     {
-      'title': 'Task Master',
-      'description': 'To-Do app built using Electron.js! Get reminders so you never miss a thing.',
+      'title': 'Tic-Tac-Toe',
+      'description': 'A responsive game with player-vs-player and player-vs-computer modes using JavaScript, HTML, CSS, and Bootstrap.',
+      'url': 'https://github.com/SadeepaNHerath/Tic-Tac-Toe',
     },
     {
-      'title': 'Book Management System',
-      'description': 'A cli project to help manage and organize books in a library.',
+      'title': 'MetaScribe',
+      'description': 'An AI-oriented project focused on productivity and content workflows, built with practical full-stack patterns.',
+      'url': 'https://github.com/SadeepaNHerath/MetaScribe',
     },
     {
-      'title': 'Aero Cast',
-      'description': 'A web application for check weather forecast details.',
+      'title': 'Mazex Website',
+      'description': 'Continuous UI and feature improvements delivered through pull requests, form enhancements, and admin-focused updates.',
+      'url': 'https://github.com/SadeepaNHerath/mazex-website',
     },
     {
-      'title': 'WeCare Health Management System',
-      'description': 'This is a project focused on managing and tracking health information for individuals.',
+      'title': 'Open_Books',
+      'description': 'A repository focused on book-related tooling and iterative improvements through regular commits.',
+      'url': 'https://github.com/SadeepaNHerath/Open_Books',
     },
   ];
 
@@ -26,7 +31,7 @@ class RecentWorkSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      itemCount: 6,
+      itemCount: projectDetails.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () => _showProjectDetails(context, index),
@@ -83,14 +88,32 @@ class RecentWorkSection extends StatelessWidget {
                 style: const TextStyle(fontSize: 14, color: Colors.black54),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("Close"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => _openProjectLink(projectDetails[index]['url']!),
+                    icon: const Icon(Icons.open_in_new),
+                    label: const Text('Open Repo'),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text("Close"),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _openProjectLink(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 }

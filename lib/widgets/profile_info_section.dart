@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileInfoSection extends StatelessWidget {
+class ProfileInfoSection extends StatefulWidget {
   const ProfileInfoSection({super.key});
+
+  @override
+  State<ProfileInfoSection> createState() => _ProfileInfoSectionState();
+}
+
+class _ProfileInfoSectionState extends State<ProfileInfoSection> {
+  static bool _hasAnimatedCountersThisSession = false;
+  late final bool _animateCounters;
 
   static final Uri _whatsappUri = Uri.parse('https://wa.me/qr/YFCMEVAQBMQTA1');
   static final Uri _linkedinUri =
       Uri.parse('https://www.linkedin.com/in/sadeepanherath/');
   static final Uri _githubUri = Uri.parse('https://github.com/SadeepaNHerath');
   static final Uri _emailUri = Uri.parse('mailto:sadeepahearth@gmail.com');
+
+  @override
+  void initState() {
+    super.initState();
+    _animateCounters = !_hasAnimatedCountersThisSession;
+    _hasAnimatedCountersThisSession = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +110,27 @@ class ProfileInfoSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _AnimatedStat(
+                label: 'Projects',
+                target: 37,
+                animate: _animateCounters,
+              ),
+              _AnimatedStat(
+                label: 'Contributions',
+                target: 534,
+                animate: _animateCounters,
+              ),
+              _AnimatedStat(
+                label: 'Followers',
+                target: 46,
+                animate: _animateCounters,
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
           Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -126,5 +162,47 @@ class ProfileInfoSection extends StatelessWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
+  }
+}
+
+class _AnimatedStat extends StatelessWidget {
+  final String label;
+  final int target;
+  final bool animate;
+
+  const _AnimatedStat({
+    required this.label,
+    required this.target,
+    required this.animate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TweenAnimationBuilder<int>(
+          tween: IntTween(begin: animate ? 0 : target, end: target),
+          duration: Duration(milliseconds: animate ? 900 : 1),
+          curve: Curves.easeOutCubic,
+          builder: (context, value, child) {
+            return Text(
+              '$value+',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+        ),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
   }
 }

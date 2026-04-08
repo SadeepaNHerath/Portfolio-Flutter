@@ -14,10 +14,12 @@ class TabNavigationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 10,
+        runSpacing: 10,
         children: [
-          _buildTab('Introduction', 0),
+          _buildTab('Summary', 0),
           _buildTab('Skills', 1),
           _buildTab('Recent Work', 2),
         ],

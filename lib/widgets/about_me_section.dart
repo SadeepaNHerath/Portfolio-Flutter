@@ -14,33 +14,35 @@ class AboutMeSection extends StatelessWidget {
           children: [
             _buildHeader(),
             const SizedBox(height: 40),
-            _buildSectionTitle("Introduction"),
+            _buildSectionTitle("Summary"),
             const SizedBox(height: 20),
             _buildAnimatedCard(
-              "Hello! I am Sadeepa Herath, an AI undergraduate and full-stack developer focused on building practical, intelligent software.",
+              "AI undergraduate at the University of Moratuwa and full-stack developer focused on intelligent software solutions. Skilled in Java, JavaScript, Spring Boot, React, and modern AI-oriented development workflows. Open to collaboration opportunities in AI-driven software engineering.",
             ),
             const SizedBox(height: 40),
-            _buildSectionTitle("What I Do"),
-            const SizedBox(height: 20),
-            _buildSpecializationRow(
-              Icons.code,
-              "Full-Stack Engineering",
-              "Build responsive frontend experiences and scalable backend systems.",
-            ),
-            const SizedBox(height: 20),
-            _buildSpecializationRow(
-              Icons.psychology_alt,
-              "AI-Driven Development",
-              "Integrate AI capabilities into real-world apps and workflows.",
-            ),
-            const SizedBox(height: 40),
-            _buildSectionTitle("Key Highlights"),
+            _buildSectionTitle("Experience"),
             const SizedBox(height: 20),
             _buildHighlightCard([
-              "Active GitHub contributor with ongoing work across multiple repositories.",
-              "Professional path centered on Java, JavaScript, Spring Boot, React, and modern web tooling.",
-              "Strong focus on maintainable engineering and clean user experience.",
-              "Open to collaborations in AI-driven software development.",
+              "Full-Stack Developer and AI Specialist working on practical, user-focused software projects.",
+              "Built and improved web applications with JavaScript/TypeScript, React, Angular, Node.js, and Spring Boot.",
+              "Contributed to collaborative repositories with continuous commits, pull requests, and code reviews.",
+              "Currently exploring deep learning, natural language processing, cloud-native development, and PWAs.",
+            ]),
+            const SizedBox(height: 40),
+            _buildSectionTitle("Education"),
+            const SizedBox(height: 20),
+            _buildHighlightCard([
+              "University of Moratuwa - Bachelor\'s in Artificial Intelligence (Undergraduate).",
+              "iCET Institute - Professional Certificate in Full-Stack Development.",
+              "Maliyadeva College, Kurunegala - Secondary education with strong mathematics and science foundation.",
+            ]),
+            const SizedBox(height: 40),
+            _buildSectionTitle("Certifications"),
+            const SizedBox(height: 20),
+            _buildHighlightCard([
+              "Professional Certificate in Full-Stack Development (iCET).",
+              "Hands-on project experience across frontend, backend, databases, API integration, and deployment workflows.",
+              "Continuous learning in AI development practices and modern software engineering standards.",
             ]),
             const SizedBox(height: 40),
             _buildSectionTitle("Skill & Tools"),
@@ -62,12 +64,6 @@ class AboutMeSection extends StatelessWidget {
               "Figma",
               "REST APIs",
             ]),
-            const SizedBox(height: 40),
-            _buildSectionTitle("Current Focus"),
-            const SizedBox(height: 20),
-            _buildTestimonialCard(
-              "Currently exploring deep learning architectures, natural language processing, cloud-native development, and progressive web applications.",
-            ),
           ],
         ),
       ),
@@ -144,44 +140,6 @@ class AboutMeSection extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecializationRow(
-      IconData icon, String title, String description) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: Colors.greenAccent.withOpacity(0.15),
-          child: Icon(icon, size: 30, color: Colors.greenAccent),
-        ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildHighlightCard(List<String> highlights) {
     return Container(
       padding: const EdgeInsets.all(20.0),
@@ -244,30 +202,4 @@ class AboutMeSection extends StatelessWidget {
     );
   }
 
-  Widget _buildTestimonialCard(String testimonial) {
-    return Container(
-      padding: const EdgeInsets.all(24.0),
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 10.0,
-            color: Colors.black38,
-            offset: Offset(3, 5),
-          ),
-        ],
-      ),
-      child: Text(
-        testimonial,
-        style: const TextStyle(
-          fontSize: 18,
-          color: Colors.white70,
-          fontStyle: FontStyle.italic,
-          height: 1.6,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
 }

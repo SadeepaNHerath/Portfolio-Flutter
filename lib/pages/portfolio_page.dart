@@ -9,7 +9,11 @@ class PortfolioPage extends StatelessWidget {
       Uri.parse('https://www.linkedin.com/in/sadeepanherath/');
   static final Uri _githubUri = Uri.parse('https://github.com/SadeepaNHerath');
   static final Uri _emailUri = Uri.parse('mailto:sadeepahearth@gmail.com');
-  static final Uri _cvUri = Uri.file('/Users/sadeepaherath/Downloads/Profile.pdf');
+  static final Uri _cvUriLocal =
+      Uri.file('/Users/sadeepaherath/Downloads/Profile.pdf');
+  static final Uri _cvUriWeb = Uri.parse(
+    'https://www.linkedin.com/in/sadeepanherath/',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -109,23 +113,23 @@ class PortfolioPage extends StatelessWidget {
                             _socialIconButton(
                               icon: Icons.work_outline,
                               tooltip: 'LinkedIn',
-                              onTap: () => _launchExternal(_linkedinUri),
+                              onTap: () => _launchExternal(context, _linkedinUri),
                             ),
                             _socialIconButton(
                               icon: Icons.code,
                               tooltip: 'GitHub',
-                              onTap: () => _launchExternal(_githubUri),
+                              onTap: () => _launchExternal(context, _githubUri),
                             ),
                             _socialIconButton(
                               icon: Icons.email_outlined,
                               tooltip: 'Email',
-                              onTap: () => _launchExternal(_emailUri),
+                              onTap: () => _launchExternal(context, _emailUri),
                             ),
                           ],
                         ),
                         const SizedBox(height: 12),
                         OutlinedButton.icon(
-                          onPressed: _downloadCv,
+                          onPressed: () => _downloadCv(context),
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.yellow),
                           ),
@@ -162,15 +166,29 @@ class PortfolioPage extends StatelessWidget {
     );
   }
 
-  static Future<void> _downloadCv() async {
-    final bool openedLocal = await _tryLaunch(_cvUri);
+  static Future<void> _downloadCv(BuildContext context) async {
+    final bool openedLocal = await _tryLaunch(_cvUriLocal);
     if (!openedLocal) {
-      await _tryLaunch(_linkedinUri);
+      final bool openedWeb = await _tryLaunch(_cvUriWeb);
+      if (!openedWeb && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to open CV link right now.'),
+          ),
+        );
+      }
     }
   }
 
-  static Future<void> _launchExternal(Uri uri) async {
-    await _tryLaunch(uri);
+  static Future<void> _launchExternal(BuildContext context, Uri uri) async {
+    final bool opened = await _tryLaunch(uri);
+    if (!opened && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Unable to open link right now.'),
+        ),
+      );
+    }
   }
 
   static Future<bool> _tryLaunch(Uri uri) async {

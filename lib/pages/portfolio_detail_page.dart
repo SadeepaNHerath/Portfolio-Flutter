@@ -17,7 +17,12 @@ class PortfolioDetailPage extends StatefulWidget {
 
 class PortfolioDetailPageState extends State<PortfolioDetailPage>
     with SingleTickerProviderStateMixin {
-  int selectedTab = 0; // 0: Introduction, 1: Skills, 2: Recent Work
+  int selectedTab = 0; // 0: Summary, 1: Skills, 2: Recent Work
+  int previousTab = 0;
+  bool _showAppBar = false;
+  bool _showProfile = false;
+  bool _showTabs = false;
+  bool _showContent = false;
   late AnimationController _controller;
 
   @override
@@ -27,6 +32,7 @@ class PortfolioDetailPageState extends State<PortfolioDetailPage>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    _startIntroReveal();
   }
 
   @override
@@ -39,6 +45,16 @@ class PortfolioDetailPageState extends State<PortfolioDetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black87,
+      onDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          _controller.reverse();
+        }
+      },
+      onEndDrawerChanged: (isOpened) {
+        if (!isOpened) {
+          _controller.reverse();
+        }
+      },
       drawer: SlideTransition(
         position:
         Tween<Offset>(begin: const Offset(-1.0, 0.0), end: Offset.zero)
@@ -63,48 +79,74 @@ class PortfolioDetailPageState extends State<PortfolioDetailPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Top App Bar with integrated drawers
-                Builder(
-                  builder: (context) => AppBarWidget(
-                    onOpenNotificationDrawer: () {
-                      _controller.forward();
-                      Scaffold.of(context).openDrawer();
-                    },
-                    onOpenAccountDrawer: () {
-                      _controller.forward();
-                      Scaffold.of(context).openEndDrawer();
-                    },
+                _buildRevealWrapper(
+                  visible: _showAppBar,
+                  beginOffset: const Offset(0, -0.03),
+                  durationMs: 300,
+                  child: Builder(
+                    builder: (context) => AppBarWidget(
+                      onOpenNotificationDrawer: () {
+                        _controller.forward();
+                        Scaffold.of(context).openDrawer();
+                      },
+                      onOpenAccountDrawer: () {
+                        _controller.forward();
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                    ),
                   ),
                 ),
                 //Profile Info Section
-                const ProfileInfoSection(),
+                _buildRevealWrapper(
+                  visible: _showProfile,
+                  beginOffset: const Offset(0, 0.03),
+                  durationMs: 420,
+                  child: const ProfileInfoSection(),
+                ),
                 const SizedBox(height: 30),
-                TabNavigationWidget(selectedTab: selectedTab,
-                  onTabChanged: (index){
-                    setState(() {
-                      selectedTab = index;
-                    });
-                  },),
+                _buildRevealWrapper(
+                  visible: _showTabs,
+                  beginOffset: const Offset(0, 0.03),
+                  durationMs: 520,
+                  child: TabNavigationWidget(selectedTab: selectedTab,
+                    onTabChanged: (index){
+                      _changeTab(index);
+                    },),
+                ),
 
                 const SizedBox(height: 20),
                 Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    switchInCurve: Curves.easeIn,
-                    switchOutCurve: Curves.easeOut,
-                    transitionBuilder: (child, animation) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: SlideTransition(
-                          position: Tween<Offset>(begin: const Offset(0.0, 0.2), end: Offset.zero)
-                              .animate(animation),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      key: ValueKey<int>(selectedTab),
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: _buildContent(),
+                  child: _buildRevealWrapper(
+                    visible: _showContent,
+                    beginOffset: const Offset(0, 0.04),
+                    durationMs: 620,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      transitionBuilder: (child, animation) {
+                        final isIncoming = child.key == ValueKey<int>(selectedTab);
+                        final movingForward = selectedTab >= previousTab;
+                        final beginOffset = isIncoming
+                            ? Offset(movingForward ? 0.08 : -0.08, 0.0)
+                            : Offset(movingForward ? -0.08 : 0.08, 0.0);
+
+                        return FadeTransition(
+                          opacity: animation,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: beginOffset,
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        key: ValueKey<int>(selectedTab),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: _buildContent(),
+                      ),
                     ),
                   ),
                 ),
@@ -117,13 +159,62 @@ class PortfolioDetailPageState extends State<PortfolioDetailPage>
             right: 16,
             child: FloatingActionButton(
               onPressed: () {
-                // Add refresh or custom action here
+                _changeTab((selectedTab + 1) % 3);
               },
               backgroundColor: Colors.deepPurple,
-              child: const Icon(Icons.refresh),
+              tooltip: 'Switch section',
+              child: const Icon(Icons.swap_horiz),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _changeTab(int index) {
+    if (index == selectedTab) {
+      return;
+    }
+    setState(() {
+      previousTab = selectedTab;
+      selectedTab = index;
+    });
+  }
+
+  void _startIntroReveal() {
+    Future.delayed(const Duration(milliseconds: 60), () {
+      if (!mounted) return;
+      setState(() => _showAppBar = true);
+    });
+    Future.delayed(const Duration(milliseconds: 150), () {
+      if (!mounted) return;
+      setState(() => _showProfile = true);
+    });
+    Future.delayed(const Duration(milliseconds: 240), () {
+      if (!mounted) return;
+      setState(() => _showTabs = true);
+    });
+    Future.delayed(const Duration(milliseconds: 320), () {
+      if (!mounted) return;
+      setState(() => _showContent = true);
+    });
+  }
+
+  Widget _buildRevealWrapper({
+    required bool visible,
+    required Offset beginOffset,
+    required int durationMs,
+    required Widget child,
+  }) {
+    return AnimatedOpacity(
+      opacity: visible ? 1.0 : 0.0,
+      duration: Duration(milliseconds: durationMs),
+      curve: Curves.easeOutCubic,
+      child: AnimatedSlide(
+        offset: visible ? Offset.zero : beginOffset,
+        duration: Duration(milliseconds: durationMs),
+        curve: Curves.easeOutCubic,
+        child: child,
       ),
     );
   }
